@@ -111,7 +111,7 @@ exports.login = async (req,res) => {
     const user = await User.findOne({email})
     //if note register
     if(!user){
-        return res.status(401),json({
+        return res.status(401).json({
             seccuss:false,
             message:"User is not registered"
         })
@@ -132,6 +132,17 @@ exports.login = async (req,res) => {
 
         user.token = token;
         user.password = undefined;
+        const options = {
+            expires:new Date(Date.now()+ 3  * 24 * 60 * 1000),
+            httpOnly:true,
+        }
+
+        res.cookie("token", token, options).status(200).json({
+            sucess:true,
+            token,
+            user,
+            message:"user logged in successfully"
+        }); 
     }
     else{
         // password do not match
@@ -143,7 +154,12 @@ exports.login = async (req,res) => {
       
 }
 catch(error) {
-
+    console.log(error);
+    return res.status(500).json({
+        success:false,
+        message:"Login Failure"
+        
+    });
     }
       
 }
