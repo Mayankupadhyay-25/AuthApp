@@ -129,15 +129,18 @@ exports.login = async (req,res) => {
         let token = jwt.sign(paylode, process.env.JWT_SECRET,{
             expiresIn:"2h"
         });
+        console.log(user);
 
         user.token = token;
+         console.log(user);
         user.password = undefined;
+         console.log(user);
         const options = {
             expires:new Date(Date.now()+ 3  * 24 * 60 * 1000),
             httpOnly:true,
         }
 
-        res.cookie("token", token, options).status(200).json({
+        res.cookie("MayankCookie", token, options).status(200).json({
             sucess:true,
             token,
             user,
